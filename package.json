@@ -1,0 +1,63 @@
+{
+  "name": "fog-of-world-parser",
+  "version": "0.1.0",
+  "description": "Parser and GeoJSON converter for Fog of World app tile files.",
+  "license": "MIT",
+  "author": "Anthony Bolivar",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@turf/boolean-point-in-polygon": "^7.2.0",
+    "@turf/helpers": "^7.2.0",
+    "pako": "^2.1.0",
+    "polygon-clipping": "^0.15.7",
+    "ts-md5": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/geojson": "^7946.0.14",
+    "@types/node": "^22.0.0",
+    "@types/pako": "^2.0.3",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "keywords": [
+    "fog-of-world",
+    "geojson",
+    "travel-map",
+    "web-mercator",
+    "tile-parser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonybolivar/fog-of-world-parser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tonybolivar/fog-of-world-parser/issues"
+  },
+  "homepage": "https://github.com/tonybolivar/fog-of-world-parser#readme",
+  "engines": {
+    "node": ">=18"
+  }
+}
