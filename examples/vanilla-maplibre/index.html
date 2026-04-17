@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>fog-of-world-parser · vanilla MapLibre</title>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+    <style>
+      html, body, #map { margin: 0; height: 100%; }
+      #map { background: #f3efe4; }
+      .hud {
+        position: fixed; top: 10px; left: 10px; z-index: 10;
+        background: rgba(255,255,255,0.9); border: 1px solid #aaa;
+        padding: 6px 10px; font: 12px system-ui; line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="hud">
+      fog-of-world-parser demo<br />
+      <span id="status">loading travels.geojson...</span>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script>
+      // Run `npm start` in ../static-node to generate travels.geojson, then
+      // drop it in this folder next to index.html. Or change the URL below
+      // to point at your own hosted copy.
+      const GEOJSON_URL = "./travels.geojson";
+
+      const map = new maplibregl.Map({
+        container: "map",
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+              attribution: "\u00a9 OpenStreetMap",
+            },
+          },
+          layers: [
+            { id: "osm", type: "raster", source: "osm",
+              paint: { "raster-saturation": -0.4 } }
+          ],
+        },
+        center: [0, 20],
+        zoom: 1.5,
+      });
+
+      map.on("load", async () => {
+        const status = document.getElementById("status");
+        try {
+          const res = await fetch(GEOJSON_URL);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          map.addSource("travels", { type: "geojson", data });
+          map.addLayer({
+            id: "fog",
+            type: "fill",
+            source: "travels",
+            filter: ["==", ["get", "kind"], "fog"],
+            paint: { "fill-color": "#121212", "fill-opacity": 0.5 },
+          });
+          map.addLayer({
+            id: "explored",
+            type: "fill",
+            source: "travels",
+            filter: ["==", ["get", "kind"], "explored"],
+            paint: { "fill-color": "#b30000", "fill-opacity": 0.6 },
+          });
+          map.addLayer({
+            id: "explored-outline",
+            type: "line",
+            source: "travels",
+            filter: ["==", ["get", "kind"], "explored"],
+            paint: { "line-color": "#121212", "line-width": 0.8 },
+          });
+
+          const meta = data.metadata || {};
+          status.innerHTML =
+            (meta.tileCount || "?") + " tiles &middot; " +
+            (meta.visitedPixelCount || "?").toLocaleString() + " cells";
+
+          if (meta.bbox) {
+            map.fitBounds(
+              [[meta.bbox[0], meta.bbox[1]], [meta.bbox[2], meta.bbox[3]]],
+              { padding: 40, maxZoom: 9, animate: false }
+            );
+          }
+        } catch (err) {
+          status.textContent = "failed to load: " + err.message;
+        }
+      });
+    </script>
+  </body>
+</html>
