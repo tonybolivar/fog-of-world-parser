@@ -11,8 +11,17 @@ Cloudflare Workers, in Deno.
 
 ## Screenshots
 
-(Drop your own screenshots in `screenshots/` after cloning. Placeholders:
-`continental.png`, `state-popup.png`, `city-zoom.png`.)
+Continental view with the state chip rail along the top:
+
+![Continental view](screenshots/continental.png)
+
+State detail popup after clicking a chip:
+
+![State popup](screenshots/state-popup.png)
+
+Close-up showing the stairstepped block geometry:
+
+![City zoom](screenshots/city-zoom.png)
 
 ## Install
 
