@@ -1,0 +1,12 @@
+{
+  "name": "example-static-node",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx cli.ts"
+  },
+  "dependencies": {
+    "fog-of-world-parser": "file:../..",
+    "tsx": "^4.19.0"
+  }
+}
