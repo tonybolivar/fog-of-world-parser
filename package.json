@@ -1,6 +1,9 @@
 {
-  "name": "fog-of-world-parser",
+  "name": "@tonybolivar/fog-of-world-parser",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Parser and GeoJSON converter for Fog of World app tile files.",
   "license": "MIT",
   "author": "Anthony Bolivar",
